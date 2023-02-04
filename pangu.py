@@ -7,6 +7,8 @@ import re
 import sys
 
 hans = r'[\u4e00-\u9fa5\u3040-\u30FF]'
+# zero-width whitespace
+zw_ws = r'[\u200c\u200b\u200d\u202c\u2060\u2061\u2062\u2063\u2064\ufeff]'
 
 
 def make_parser():
@@ -37,6 +39,11 @@ def make_parser():
         dest='trailing_whitespace',
         action='store_false',
         help='指定此选项以保留前后空白字符')
+    parser.add_argument(
+        '--no-remove-zero-width-whitespace',
+        dest='zero_width_whitespace',
+        action='store_false',
+        help='指定此选项以保留零宽空白字符')
     parser.add_argument(
         '--date',
         type=int,
@@ -196,6 +203,11 @@ def pangu_trailing_whitespace(l):
     return l
 
 
+def pangu_zero_width_whitespace(l):
+    l = re.sub(zw_ws, '', l)
+    return l
+
+
 def pangu_trans(l, args):
     # 汉字后的标点符号，转成全角符号。
     if args.fullwidth_punctuation:
@@ -231,6 +243,8 @@ def pangu_trans(l, args):
 
     if args.trailing_whitespace:
         l = pangu_trailing_whitespace(l)
+    if args.zero_width_whitespace:
+        l = pangu_zero_width_whitespace(l)
 
     return l
 
