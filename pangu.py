@@ -86,8 +86,8 @@ def pangu_fullwidth_punctuation(l, punctuation_brackets):
     # 预处理，将中括号(【,】)更换为特定类型的中括号(『』)，
     # 避免处理过程中无法正常处理。
     # -- 不是很明白这里的逻辑，暂时搁置
-    #l = l.replace(bracket_left, '〖')
-    #l = l.replace(bracket_right, '〗')
+    l = l.replace(bracket_left, '〘')
+    l = l.replace(bracket_right, '〙')
 
     # 处理一对方括号。注意：不支持有嵌套的方括号。
     l = re.sub(r'\[({0}[^[\]]*|[^[\]]*{0})\]'.format(hans),
@@ -128,6 +128,10 @@ def pangu_fullwidth_punctuation_link(l, punctuation_brackets):
     l = re.sub(
         r'[{0}[](https?://\S+\s+[^{1}\]]+)[{1}\]]'.format(
             bracket_left, bracket_right), r'[\1]', l)
+
+    l = l.replace('〘', bracket_left)
+    l = l.replace('〙', bracket_right)
+
     return l
 
 
